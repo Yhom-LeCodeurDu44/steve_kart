@@ -6,15 +6,6 @@ pygame.init()
 screen = pygame.display.set_mode((800, 800))
 MALIBU = (140, 198, 255)
 
-STEVE_IMAGE_FILES = ["resources/steve_kart_face.png",
-                     "resources/steve_kart_bas_droite.png",
-                     "resources/steve_kart_droite.png",
-                     "resources/steve_kart_haut_droite.png",
-                     "resources/steve_kart_dos.png",
-                     "resources/steve_kart_bas_gauche.png",
-                     "resources/steve_kart_gauche.png",
-                     "resources/steve_kart_haut_gauche.png"]
-
 kart_face = pygame.image.load("resources/steve_kart_face.png")
 kart_face.set_colorkey(MALIBU)
 kart_droite = pygame.image.load("resources/steve_kart_droite.png")
@@ -23,6 +14,20 @@ kart_dos = pygame.image.load("resources/steve_kart_dos.png")
 kart_dos.set_colorkey(MALIBU)
 kart_gauche = pygame.image.load("resources/steve_kart_gauche.png")
 kart_gauche.set_colorkey(MALIBU)
+
+KART_IMAGES = []
+for f in ["resources/steve_kart_haut_gauche.png",
+          "resources/steve_kart_dos.png",
+          "resources/steve_kart_haut_droite.png",
+          "resources/steve_kart_gauche.png",
+          "resources/steve_kart_face.png",
+          "resources/steve_kart_droite.png",
+          "resources/steve_kart_bas_gauche.png",
+          "resources/steve_kart_face.png",
+          "resources/steve_kart_bas_droite.png"]:
+    image = pygame.image.load(f)
+    image.set_colorkey(MALIBU)
+    KART_IMAGES.append(image)
 
 circuit = pygame.image.load("resources/steve_kart_map.png")
 circuit = pygame.transform.scale(circuit, (800, 800))
@@ -42,26 +47,22 @@ while True:
     liste_evenements = pygame.event
 
     keys = pygame.key.get_pressed()
+    direction = 4
     if keys[pygame.K_UP]:
+        direction -= 3
         steve_position[1] -= 4
-
-    if keys[pygame.K_UP]:
-        kart_steve = kart_dos
-
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_RIGHT]:
-        steve_position[0] += 4
-        kart_steve = kart_droite
-
-    keys = pygame.key.get_pressed()
     if keys[pygame.K_DOWN]:
+        direction += 3
         steve_position[1] += 4
-        kart_steve = kart_face
-
-    keys = pygame.key.get_pressed()
+    if keys[pygame.K_RIGHT]:
+        direction += 1
+        steve_position[0] += 4
     if keys[pygame.K_LEFT]:
+        direction -= 1
         steve_position[0] -= 4
-        kart_steve = kart_gauche
+
+    if direction != 4:
+        kart_steve = KART_IMAGES[direction]
 
     # détection d'evenement
     for nouvel_evenement in liste_evenements.get():
