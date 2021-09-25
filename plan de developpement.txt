@@ -1,8 +1,0 @@
-X Réduire la taille du kart
-X kart va en diagonale
-X position inchangée si on touche à rien
-x position inchangée si on touche directions opposées en même temps
-- limite des bords
-- utilisation joystick
-- limite des bords
-- passage secret dans bords
