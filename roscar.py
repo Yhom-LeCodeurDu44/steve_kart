@@ -1,10 +1,13 @@
 import pygame
+from pygame.sprite import Sprite, Rect
 
 pygame.init()
 
 # mettre à la bonne taille
-screen = pygame.display.set_mode((768, 768))
+TAILLE_ECRAN = (768, 768)
+screen = pygame.display.set_mode(TAILLE_ECRAN)
 MALIBU = (140, 198, 255)
+DEMARRAGE_KART = (145, 637)
 TAILLE_KART = 20
 VITESSE = 4
 kart_images = {
@@ -27,14 +30,22 @@ for x in [-1, 0, 1]:
         image.set_colorkey(MALIBU)  # color du fond a ne pas i,primer
         kart_images[(x, y)] = pygame.transform.scale(image, (TAILLE_KART, TAILLE_KART))
 
-circuit = pygame.image.load("resources/steve_kart_map.png")
-circuit = pygame.transform.scale(circuit, (768, 768))
-direction_x = 0
-direction_y = -1
-kart_steve = kart_images[(direction_x, direction_y)]
+circuit = Sprite()
+circuit.image = pygame.image.load("resources/steve_kart_map.png")
+circuit.image = pygame.transform.scale(circuit.image, TAILLE_ECRAN)
+circuit.rect = pygame.Rect((0,0), TAILLE_ECRAN)
 
+steve = Sprite()
+steve.image = kart_images[tuple(direction)]
+steve.rect = pygame.Rect(DEMARRAGE_KART, (TAILLE_KART, TAILLE_KART))
+decors = pygame.sprite.Group(circuit)
+karts = pygame.sprite.Group(steve)
 # steve taille
-steve_position = [145, 637]
+
+direction = [0,1]
+direction[0] = 0
+direction[1] = -1
+
 
 # boucle principale
 clock = pygame.time.Clock()
@@ -44,31 +55,31 @@ while True:
     # détection clavier et direction + position
     keys = pygame.key.get_pressed()
 
-    direction_x = 0
-    direction_y = 0
+    direction[0] = 0
+    direction[1] = 0
 
     if keys[pygame.K_UP]:
-        direction_y -= 1
+        direction[1] -= 1
 
     if keys[pygame.K_DOWN]:
-        direction_y += 1
+        direction[1] += 1
 
     if keys[pygame.K_RIGHT]:
-        direction_x += 1
+        direction[0] += 1
 
     if keys[pygame.K_LEFT]:
-        direction_x -= 1
+        direction[0] -= 1
 
-    steve_position[0] += direction_x * VITESSE
-    steve_position[1] += direction_y * VITESSE
+    steve.rect.x += direction[0] * VITESSE
+    steve.rect.y += direction[1] * VITESSE
 
     # si la direction change, changer l'image
-    if direction_y != 0 or direction_x != 0:
-        kart_steve = kart_images[(direction_x, direction_y)]
+    if direction[0] != 0 or direction[1] != 0:
+        steve.image = kart_images[tuple(direction)]
 
     # dessin
-    screen.blit(circuit, (0, 0))
-    screen.blit(source=kart_steve, dest=steve_position)
+    decors.draw(screen)
+    karts.draw(screen)
     pygame.display.flip()
 
     # détection d'evenement
