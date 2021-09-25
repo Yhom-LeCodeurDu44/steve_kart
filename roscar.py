@@ -5,27 +5,33 @@ pygame.init()
 # mettre à la bonne taille
 screen = pygame.display.set_mode((768, 768))
 MALIBU = (140, 198, 255)
-
+TAILLE_KART = 20
+VITESSE = 4
 kart_images = {
-    1: "resources/steve_kart_dos.png",
-    2: "resources/steve_kart_haut_droite.png",
-    3: "resources/steve_kart_droite.png",
-    4: "resources/steve_kart_bas_droite.png",
-    5: "resources/steve_kart_face.png",
-    6: "resources/steve_kart_bas_gauche.png",
-    7: "resources/steve_kart_gauche.png",
-    8: "resources/steve_kart_haut_gauche.png",
-
+    (0, -1): "resources/steve_kart_dos.png",
+    (1, -1): "resources/steve_kart_haut_droite.png",
+    (1, 0): "resources/steve_kart_droite.png",
+    (1, 1): "resources/steve_kart_bas_droite.png",
+    (0, 0): "resources/steve_kart_dos.png",
+    (0, 1): "resources/steve_kart_face.png",
+    (-1, 1): "resources/steve_kart_bas_gauche.png",
+    (-1, 0): "resources/steve_kart_gauche.png",
+    (-1, -1): "resources/steve_kart_haut_gauche.png",
 }
-for i in range(1, 9):
-    print(kart_images[i])
-    image = pygame.image.load(kart_images[i])
-    image.set_colorkey(MALIBU)  # color du fond a ne pas i,primer
-    kart_images[i] = pygame.transform.scale(image, (20, 20))
+
+for x in [-1, 0, 1]:
+    for y in [-1, 0, 1]:
+        nom_fichier = kart_images[(x, y)]
+        print(nom_fichier)
+        image = pygame.image.load(nom_fichier)
+        image.set_colorkey(MALIBU)  # color du fond a ne pas i,primer
+        kart_images[(x, y)] = pygame.transform.scale(image, (TAILLE_KART, TAILLE_KART))
 
 circuit = pygame.image.load("resources/steve_kart_map.png")
 circuit = pygame.transform.scale(circuit, (768, 768))
-kart_steve = kart_images[1]
+direction_x = 0
+direction_y = -1
+kart_steve = kart_images[(direction_x, direction_y)]
 
 # steve taille
 steve_position = [145, 637]
@@ -37,36 +43,28 @@ while True:
 
     # détection clavier et direction + position
     keys = pygame.key.get_pressed()
-    direction = 1
-    if keys[pygame.K_UP]:
-        direction = 1
-        steve_position[1] -= 4
 
-    if keys[pygame.K_RIGHT]:
-        direction = 3
-        steve_position[0] += 4
+    direction_x = 0
+    direction_y = 0
+
+    if keys[pygame.K_UP]:
+        direction_y -= 1
 
     if keys[pygame.K_DOWN]:
-        direction = 5
-        steve_position[1] += 4
+        direction_y += 1
+
+    if keys[pygame.K_RIGHT]:
+        direction_x += 1
 
     if keys[pygame.K_LEFT]:
-        direction = 7
-        steve_position[0] -= 4
+        direction_x -= 1
 
-    if keys[pygame.K_UP] and keys[pygame.K_RIGHT]:
-        direction = 2
+    steve_position[0] += direction_x * VITESSE
+    steve_position[1] += direction_y * VITESSE
 
-    if keys[pygame.K_DOWN] and keys[pygame.K_RIGHT]:
-        direction = 4
-
-    if keys[pygame.K_DOWN] and keys[pygame.K_LEFT]:
-        direction = 6
-
-    if keys[pygame.K_UP] and keys[pygame.K_LEFT]:
-        direction = 8
-
-    kart_steve = kart_images[direction]
+    # si la direction change, changer l'image
+    if direction_y != 0 or direction_x != 0:
+        kart_steve = kart_images[(direction_x, direction_y)]
 
     # dessin
     screen.blit(circuit, (0, 0))
