@@ -1,0 +1,5 @@
+X Réduire la taille du kart
+- kart va en diagonale
+- utilisation joystick
+- limite des bords
+- passage secret dans bords
