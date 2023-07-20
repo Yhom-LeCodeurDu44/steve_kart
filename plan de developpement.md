@@ -3,9 +3,10 @@
 [x] kart va en diagonale
 [x] position inchangée si on touche à rien
 [x] position inchangée si on touche directions opposées en même temps
-[ ] limite des bords
+[x] limite des bords
 [ ] utilisation joystick
-[ ] passage secret dans bords
+[x] passage secret dans bords
+[ ] ajout d'un second kart
 
 # Notes #
 ## Détection des bords
