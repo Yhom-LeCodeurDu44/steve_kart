@@ -6,7 +6,7 @@ pygame.init()
 screen = pygame.display.set_mode((768, 768))
 MALIBU = (140, 198, 255)
 TAILLE_KART = 20
-VITESSE = 4
+vitesse = VITESSE = 4
 kart_images = {
     (0, -1): "resources/steve_kart_dos.png",
     (1, -1): "resources/steve_kart_haut_droite.png",
@@ -24,9 +24,15 @@ for x in [-1, 0, 1]:
         nom_fichier = kart_images[(x, y)]
         print(nom_fichier)
         image = pygame.image.load(nom_fichier)
-        image.set_colorkey(MALIBU)  # color du fond a ne pas i,primer
+        image.set_colorkey(MALIBU)  # color du fond a ne pas imprimer
         kart_images[(x, y)] = pygame.transform.scale(image, (TAILLE_KART, TAILLE_KART))
 
+#bonne taille hors pitse
+sortie = pygame.image.load("resources/circuit.png")
+sortie.set_colorkey(MALIBU)
+sortie = pygame.transform.scale(sortie, (768, 768))
+sortie_mask = pygame.mask.from_surface(sortie)
+    
 circuit = pygame.image.load("resources/steve_kart_map.png")
 circuit = pygame.transform.scale(circuit, (768, 768))
 direction_x = 0
@@ -59,8 +65,19 @@ while True:
     if keys[pygame.K_LEFT]:
         direction_x -= 1
 
-    steve_position[0] += direction_x * VITESSE
-    steve_position[1] += direction_y * VITESSE
+    steve_position[0] += direction_x * vitesse
+    steve_position[1] += direction_y * vitesse
+    
+    # arreter le kart si hors piste   
+    sortie_mask = pygame.mask.from_surface(sortie)
+    maskart = pygame.mask.from_surface(kart_steve)
+    horspiste = sortie_mask.overlap(maskart, steve_position)
+    if horspiste: 
+        vitesse = 0.5
+        print("hors piste")
+    else :
+        vitesse = VITESSE
+
 
     # si la direction change, changer l'image
     if direction_y != 0 or direction_x != 0:
@@ -68,6 +85,7 @@ while True:
 
     # dessin
     screen.blit(circuit, (0, 0))
+    screen.blit(sortie, (0, 0))
     screen.blit(source=kart_steve, dest=steve_position)
     pygame.display.flip()
 
