@@ -40,6 +40,7 @@ def preparation_masque_hors_piste():
 
 def generation_sprite_circuit():
     circuit = pygame.image.load("resources/steve_kart_map.png")
+    sortie.set_colorkey(MALIBU)
     return pygame.transform.scale(circuit, (768, 768))
 
 def calcul_commande_direction( keys ):
@@ -86,9 +87,9 @@ def choisir_orientation_sprite_steve_kart( kart_courant, direction_x, direction_
 def detection_signal_interruption():
     liste_evenements = pygame.event
     for nouvel_evenement in liste_evenements.get():
-        # check if the event is the X button
+        # vérifier si signal se sortie
         if nouvel_evenement.type == pygame.QUIT:
-            # if it is quit the game
+            # cassos
             exit(0)
 
 def afficher_tout(screen, circuit, sortie, kart_steve, steve_position):
