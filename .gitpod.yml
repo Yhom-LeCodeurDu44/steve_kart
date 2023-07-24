@@ -4,7 +4,8 @@
 
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
-image: .gitpod.Dockerfile
+image: 
+  file: .gitpod.Dockerfile
 
 ports:
   - port: 5900
