@@ -40,7 +40,7 @@ def preparation_masque_hors_piste():
 
 def generation_sprite_circuit():
     circuit = pygame.image.load("resources/steve_kart_map.png")
-    sortie.set_colorkey(MALIBU)
+    circuit.set_colorkey(MALIBU)
     return pygame.transform.scale(circuit, (768, 768))
 
 def calcul_commande_direction( keys ):
