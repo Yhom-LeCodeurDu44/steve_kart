@@ -6,7 +6,14 @@
 
 image: .gitpod.Dockerfile
 
+ports:
+  - port: 5900
+    onOpen: ignore
+  - port: 6080
+    onOpen: open-preview
+
 tasks:
   - init: pip install -r requirements.txt
+    command: python roscar.py
 
 
