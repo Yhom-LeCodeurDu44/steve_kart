@@ -33,13 +33,14 @@ def generation_sprites_kart():
 
 def preparation_masque_hors_piste():
     sortie = pygame.image.load("resources/circuit.png")
-    sortie.set_colorkey(MALIBU)
     sortie = pygame.transform.scale(sortie, (768, 768))
+    sortie.set_colorkey(MALIBU)
     mask = pygame.mask.from_surface(sortie)
     return mask, sortie
 
 def generation_sprite_circuit():
     circuit = pygame.image.load("resources/steve_kart_map.png")
+    circuit.set_colorkey(MALIBU)
     return pygame.transform.scale(circuit, (768, 768))
 
 def calcul_commande_direction( keys ):
