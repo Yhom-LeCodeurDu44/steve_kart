@@ -52,16 +52,16 @@ def calcul_commande_direction( keys ):
     direction_x = 0
     direction_y = 0
 
-    if keys[pygame.K_UP]:
+    if keys[pygame.K_z]:
         direction_y -= 1
 
-    if keys[pygame.K_DOWN]:
+    if keys[pygame.K_s]:
         direction_y += 1
 
-    if keys[pygame.K_RIGHT]:
+    if keys[pygame.K_d]:
         direction_x += 1
 
-    if keys[pygame.K_LEFT]:
+    if keys[pygame.K_q]:
         direction_x -= 1
 
     return direction_x, direction_y
