@@ -7,6 +7,7 @@
 [ ] utilisation joystick
 [x] passage secret dans bords
 [ ] ajout d'un second kart
+[ ] réussir a faire marcher la touche de reload
 
 # Notes #
 ## Détection des bords

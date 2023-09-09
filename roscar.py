@@ -68,9 +68,9 @@ def calcul_commande_direction( keys ):
 
 def commande_reload_position( steve_position, keys ):
     if keys[pygame.K_f]:
-        print('replacement demandé')
-        steve_position[0] = POSITION_DEPART[0]
-        steve_position[1] = POSITION_DEPART[1]
+        print('replacement demandé2')
+        #jai essayé des trucs mais jsp...
+        steve_position = POSITION_DEPART
 
 
 def mise_a_jour_nouvelle_position(steve_position, direction_x, direction_y, vitesse):
