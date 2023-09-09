@@ -6,7 +6,9 @@ pygame.init()
 screen = pygame.display.set_mode((768, 768))
 MALIBU = (140, 198, 255)
 TAILLE_KART = 20
-vitesse = VITESSE = 4
+VITESSE_MAX = 4
+vitesse = VITESSE_MAX
+VITESSE_HORS_PISTE = 0.5
 
 def generation_sprites_kart():
     sprites = {
@@ -70,19 +72,20 @@ def detection_hors_piste(sortie_mask, kart_steve):
     maskart = pygame.mask.from_surface(kart_steve)
     return sortie_mask.overlap(maskart, steve_position)
     
-def mise_a_jour_vitesse_horspiste( horspiste ):
+def mise_a_jour_vitesse_horspiste( vitesse_courante, horspiste ):
     if horspiste: 
-        print("hors piste")
-        return 0.5
+        if vitesse_courante <= 0:
+            return 0
+        return vitesse_courante - VITESSE_MAX/120
     else :
-        return VITESSE    
+        return VITESSE_MAX    
     
 def choisir_orientation_sprite_steve_kart( kart_courant, direction_x, direction_y ):     
-        # si la direction change, changer l'image
-        if direction_y != 0 or direction_x != 0:
-            return kart_images[(direction_x, direction_y)]
-        else:
-            return kart_courant
+    # si la direction change, changer l'image
+    if direction_y != 0 or direction_x != 0:
+        return kart_images[(direction_x, direction_y)]
+    else:
+        return kart_courant
 
 def detection_signal_interruption():
     liste_evenements = pygame.event
@@ -122,7 +125,7 @@ while True:
     
     # arreter le kart si hors piste   
     horspiste = detection_hors_piste( sortie_mask, kart_steve)
-    vitesse = mise_a_jour_vitesse_horspiste( horspiste )
+    vitesse = mise_a_jour_vitesse_horspiste( vitesse_courante=vitesse, horspiste=horspiste )
 
     kart_steve = choisir_orientation_sprite_steve_kart(kart_steve, direction_x, direction_y)
 
