@@ -9,6 +9,9 @@ TAILLE_KART = 20
 VITESSE_MAX = 4
 vitesse = VITESSE_MAX
 VITESSE_HORS_PISTE = 0.5
+POSITION_DEPART = [145, 637]
+
+
 
 def generation_sprites_kart():
     sprites = {
@@ -63,9 +66,17 @@ def calcul_commande_direction( keys ):
 
     return direction_x, direction_y
 
+def commande_reload_position( steve_position, keys ):
+    if keys[pygame.K_f]:
+        print('replacement demandé')
+        steve_position[0] = POSITION_DEPART[0]
+        steve_position[1] = POSITION_DEPART[1]
+
+
 def mise_a_jour_nouvelle_position(steve_position, direction_x, direction_y, vitesse):
     steve_position[0] += direction_x * vitesse
     steve_position[1] += direction_y * vitesse
+    return steve_position
     #le contenu de steve_position est directement modifié
 
 def detection_hors_piste(sortie_mask, kart_steve):
@@ -76,7 +87,8 @@ def mise_a_jour_vitesse_horspiste( vitesse_courante, horspiste ):
     if horspiste: 
         if vitesse_courante <= 0:
             return 0
-        return vitesse_courante - VITESSE_MAX/120
+        else:
+            return vitesse_courante - VITESSE_MAX/120
     else :
         return VITESSE_MAX    
     
@@ -109,7 +121,7 @@ sortie_mask, sortie = preparation_masque_hors_piste()
 direction_x = 0
 direction_y = -1
 kart_steve = kart_images[(direction_x, direction_y)]
-steve_position = [145, 637]
+steve_position = POSITION_DEPART
 
 # boucle principale
 clock = pygame.time.Clock()
@@ -121,11 +133,13 @@ while True:
 
     direction_x, direction_y = calcul_commande_direction( keys )
 
+    commande_reload_position( steve_position, keys )
+
     mise_a_jour_nouvelle_position(steve_position, direction_x, direction_y, vitesse)
     
     # arreter le kart si hors piste   
     horspiste = detection_hors_piste( sortie_mask, kart_steve)
-    vitesse = mise_a_jour_vitesse_horspiste( vitesse_courante=vitesse, horspiste=horspiste )
+    vitesse = mise_a_jour_vitesse_horspiste( vitesse, horspiste )
 
     kart_steve = choisir_orientation_sprite_steve_kart(kart_steve, direction_x, direction_y)
 
