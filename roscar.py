@@ -88,7 +88,7 @@ def mise_a_jour_vitesse_horspiste( vitesse_courante, horspiste ):
         if vitesse_courante <= 0:
             return 0
         else:
-            return vitesse_courante - VITESSE_MAX/120
+            return vitesse_courante - VITESSE_MAX/35
     else :
         return VITESSE_MAX    
     
