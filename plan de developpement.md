@@ -8,7 +8,9 @@
 [x] passage secret dans bords
 [ ] ajout d'un second kart
 [ ] réussir a faire marcher la touche de reload
+[ ] A la fin, faire une beau circuit avec couleur MALIBU (type circuit sur paint)
 
+*
 # Notes #
 ## Détection des bords
 Notes sur les détection de collisions

@@ -66,13 +66,6 @@ def calcul_commande_direction( keys ):
 
     return direction_x, direction_y
 
-def commande_reload_position( steve_position, keys ):
-    if keys[pygame.K_f]:
-        print('replacement demandé2')
-        #jai essayé des trucs mais jsp...
-        steve_position = POSITION_DEPART
-
-
 def mise_a_jour_nouvelle_position(steve_position, direction_x, direction_y, vitesse):
     steve_position[0] += direction_x * vitesse
     steve_position[1] += direction_y * vitesse
@@ -122,6 +115,13 @@ direction_x = 0
 direction_y = -1
 kart_steve = kart_images[(direction_x, direction_y)]
 steve_position = POSITION_DEPART
+
+def commande_reload_position( steve_position, keys ):
+    if keys[pygame.K_f]:
+        print('replacement demandé2')
+        #Le truc qui bug -->
+        kart_images 
+
 
 # boucle principale
 clock = pygame.time.Clock()
