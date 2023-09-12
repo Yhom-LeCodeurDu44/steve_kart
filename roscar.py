@@ -119,9 +119,7 @@ steve_position = POSITION_DEPART
 def commande_reload_position( steve_position, keys ):
     if keys[pygame.K_f]:
         print('replacement demandé2')
-        #Le truc qui bug -->
-        kart_images[(direction_x, direction_y)]
-
+        #Le truc qui bug -->  
 
 # boucle principale
 clock = pygame.time.Clock()
