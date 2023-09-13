@@ -66,16 +66,19 @@ def calcul_commande_direction( keys ):
 
     return direction_x, direction_y
 
-def mise_a_jour_nouvelle_position(steve_position, direction_x, direction_y, vitesse):
-    steve_position[0] += direction_x * vitesse
-    steve_position[1] += direction_y * vitesse
-    return steve_position
-    #le contenu de steve_position est directement modifié
+def calcul_nouvelle_position(steve_position, direction_x, direction_y, vitesse):
+    nouvelle_position = [
+        steve_position[0] + direction_x * vitesse,
+        steve_position[1] + direction_y * vitesse
+    ]
+    return nouvelle_position
+
 
 def detection_hors_piste(sortie_mask, kart_steve):
     maskart = pygame.mask.from_surface(kart_steve)
     return sortie_mask.overlap(maskart, steve_position)
     
+
 def mise_a_jour_vitesse_horspiste( vitesse_courante, horspiste ):
     if horspiste: 
         if vitesse_courante <= 0:
@@ -118,8 +121,9 @@ steve_position = POSITION_DEPART
 
 def commande_reload_position( steve_position, keys ):
     if keys[pygame.K_f]:
-        print('replacement demandé2')
-        #Le truc qui bug -->  
+        return POSITION_DEPART
+    else:
+        return steve_position 
 
 # boucle principale
 clock = pygame.time.Clock()
@@ -131,9 +135,9 @@ while True:
 
     direction_x, direction_y = calcul_commande_direction( keys )
 
-    commande_reload_position( steve_position, keys )
+    steve_position = commande_reload_position( steve_position, keys )
 
-    mise_a_jour_nouvelle_position(steve_position, direction_x, direction_y, vitesse)
+    steve_position = calcul_nouvelle_position(steve_position, direction_x, direction_y, vitesse)
     
     # arreter le kart si hors piste   
     horspiste = detection_hors_piste( sortie_mask, kart_steve)
