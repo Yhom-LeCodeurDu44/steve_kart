@@ -10,6 +10,7 @@ VITESSE_MAX = 4
 vitesse = VITESSE_MAX
 VITESSE_HORS_PISTE = 0.5
 POSITION_DEPART = [145, 637]
+POSITION_DEPART_2 = [165, 637]
 
 
 
@@ -23,6 +24,29 @@ def generation_sprites_kart():
         (0, 1): "resources/steve_kart_face.png",
         (-1, 1): "resources/steve_kart_bas_gauche.png",
         (-1, 0): "resources/steve_kart_gauche.png",
+        (-1, -1): "resources/steve_kart_haut_gauche.png",
+    }
+
+    for x in [-1, 0, 1]:
+        for y in [-1, 0, 1]:
+            nom_fichier = sprites[(x, y)]
+            print(nom_fichier)
+            image = pygame.image.load(nom_fichier)
+            image.set_colorkey(MALIBU)  # color du fond a ne pas imprimer
+            sprites[(x, y)] = pygame.transform.scale(image, (TAILLE_KART, TAILLE_KART))
+    
+    return sprites
+
+def generation_sprites_kart_bob():
+    sprites = {
+        (0, -1): "resources/bob_kart_dos.png",
+        (1, -1): "resources/steve_kart_haut_droite.png",
+        (1, 0): "resources/bob_kart_droite.png",
+        (1, 1): "resources/bob_kart_bas_droite.png",
+        (0, 0): "resources/bob_kart_dos.png",
+        (0, 1): "resources/bob_kart_face.png",
+        (-1, 1): "resources/bob_kart_bas_gauche.png",
+        (-1, 0): "resources/bob_kart_gauche.png",
         (-1, -1): "resources/steve_kart_haut_gauche.png",
     }
 
@@ -109,15 +133,19 @@ def afficher_tout(screen, circuit, sortie, kart_steve, steve_position):
     screen.blit(source=kart_steve, dest=steve_position)
     pygame.display.flip()
 
+
 kart_images = generation_sprites_kart()
+bob_images = generation_sprites_kart_bob()
 circuit = generation_sprite_circuit()
 sortie_mask, sortie = preparation_masque_hors_piste()
     
 #initialisation Steve
-direction_x = 0
-direction_y = -1
-kart_steve = kart_images[(direction_x, direction_y)]
+steve_direction_x = 0
+steve_direction_y = -1
+steve_kart = kart_images[(steve_direction_x, steve_direction_y)]
+
 steve_position = POSITION_DEPART
+bob_position = POSITION_DEPART_2
 
 def commande_reload_position( steve_position, keys ):
     if keys[pygame.K_f]:
@@ -133,19 +161,19 @@ while True:
     # détection clavier et direction + position
     keys = pygame.key.get_pressed()
 
-    direction_x, direction_y = calcul_commande_direction( keys )
+    steve_direction_x, steve_direction_y = calcul_commande_direction( keys )
 
     steve_position = commande_reload_position( steve_position, keys )
 
-    steve_position = calcul_nouvelle_position(steve_position, direction_x, direction_y, vitesse)
+    steve_position = calcul_nouvelle_position(steve_position, steve_direction_x, steve_direction_y, vitesse)
     
     # arreter le kart si hors piste   
-    horspiste = detection_hors_piste( sortie_mask, kart_steve)
+    horspiste = detection_hors_piste( sortie_mask, steve_kart)
     vitesse = mise_a_jour_vitesse_horspiste( vitesse, horspiste )
 
-    kart_steve = choisir_orientation_sprite_steve_kart(kart_steve, direction_x, direction_y)
+    steve_kart = choisir_orientation_sprite_steve_kart(steve_kart, steve_direction_x, steve_direction_y)
 
-    afficher_tout( screen, circuit, sortie, kart_steve, steve_position )
+    afficher_tout( screen, circuit, sortie, steve_kart, steve_position )
 
     # détection d'evenement
     detection_signal_interruption()
