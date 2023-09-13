@@ -90,6 +90,24 @@ def calcul_commande_direction( keys ):
 
     return direction_x, direction_y
 
+def calcul_commande_direction_bob( keys ):
+    direction_x = 0
+    direction_y = 0
+
+    if keys[pygame.K_UP]:
+        direction_y -= 1
+
+    if keys[pygame.K_DOWN]:
+        direction_y += 1
+
+    if keys[pygame.K_RIGHT]:
+        direction_x += 1
+
+    if keys[pygame.K_LEFT]:
+        direction_x -= 1
+
+    return direction_x, direction_y
+
 def calcul_nouvelle_position(steve_position, direction_x, direction_y, vitesse):
     nouvelle_position = [
         steve_position[0] + direction_x * vitesse,
@@ -115,7 +133,14 @@ def mise_a_jour_vitesse_horspiste( vitesse_courante, horspiste ):
 def choisir_orientation_sprite_steve_kart( kart_courant, direction_x, direction_y ):     
     # si la direction change, changer l'image
     if direction_y != 0 or direction_x != 0:
-        return kart_images[(direction_x, direction_y)]
+        return steve_images[(direction_x, direction_y)]
+    else:
+        return kart_courant
+
+def choisir_orientation_sprite_bob_kart( kart_courant, direction_x, direction_y ):     
+    # si la direction change, changer l'image
+    if direction_y != 0 or direction_x != 0:
+        return bob_images[(direction_x, direction_y)]
     else:
         return kart_courant
 
@@ -127,14 +152,15 @@ def detection_signal_interruption():
             # cassos
             exit(0)
 
-def afficher_tout(screen, circuit, sortie, kart_steve, steve_position):
+def afficher_tout(screen, circuit, sortie, kart_a, position_a, kart_b, position_b):
     screen.blit(circuit, (0, 0))
     screen.blit(sortie, (0, 0))
-    screen.blit(source=kart_steve, dest=steve_position)
+    screen.blit(source=kart_a, dest=position_a)
+    screen.blit(source=kart_b, dest=position_b)
     pygame.display.flip()
 
 
-kart_images = generation_sprites_kart()
+steve_images = generation_sprites_kart()
 bob_images = generation_sprites_kart_bob()
 circuit = generation_sprite_circuit()
 sortie_mask, sortie = preparation_masque_hors_piste()
@@ -142,9 +168,13 @@ sortie_mask, sortie = preparation_masque_hors_piste()
 #initialisation Steve
 steve_direction_x = 0
 steve_direction_y = -1
-steve_kart = kart_images[(steve_direction_x, steve_direction_y)]
-
+steve_kart = steve_images[(steve_direction_x, steve_direction_y)]
 steve_position = POSITION_DEPART
+
+#initialisation bob
+bob_direction_x = 0
+bob_direction_y = -1
+bob_kart = bob_images[(bob_direction_x, bob_direction_y)]
 bob_position = POSITION_DEPART_2
 
 def commande_reload_position( steve_position, keys ):
@@ -163,6 +193,8 @@ while True:
 
     steve_direction_x, steve_direction_y = calcul_commande_direction( keys )
 
+    bob_direction_x, bob_direction_y = calcul_commande_direction_bob( keys )
+
     steve_position = commande_reload_position( steve_position, keys )
 
     steve_position = calcul_nouvelle_position(steve_position, steve_direction_x, steve_direction_y, vitesse)
@@ -172,8 +204,9 @@ while True:
     vitesse = mise_a_jour_vitesse_horspiste( vitesse, horspiste )
 
     steve_kart = choisir_orientation_sprite_steve_kart(steve_kart, steve_direction_x, steve_direction_y)
+    bob_kart = choisir_orientation_sprite_bob_kart(bob_kart, bob_direction_x, bob_direction_y)
 
-    afficher_tout( screen, circuit, sortie, steve_kart, steve_position )
+    afficher_tout( screen, circuit, sortie, steve_kart, steve_position, bob_kart, bob_position )
 
     # détection d'evenement
     detection_signal_interruption()
