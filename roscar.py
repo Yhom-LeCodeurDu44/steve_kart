@@ -40,14 +40,14 @@ def generation_sprites_kart():
 def generation_sprites_kart_bob():
     sprites = {
         (0, -1): "resources/bob_kart_dos.png",
-        (1, -1): "resources/steve_kart_haut_droite.png",
+        (1, -1): "resources/bob_kart_haut_droite.png",
         (1, 0): "resources/bob_kart_droite.png",
         (1, 1): "resources/bob_kart_bas_droite.png",
         (0, 0): "resources/bob_kart_dos.png",
         (0, 1): "resources/bob_kart_face.png",
         (-1, 1): "resources/bob_kart_bas_gauche.png",
         (-1, 0): "resources/bob_kart_gauche.png",
-        (-1, -1): "resources/steve_kart_haut_gauche.png",
+        (-1, -1): "resources/bob_kart_haut_gauche.png",
     }
 
     for x in [-1, 0, 1]:
