@@ -4,12 +4,12 @@
 [x] position inchangée si on touche à rien
 [x] position inchangée si on touche directions opposées en même temps
 [x] limite des bords
-[ ] utilisation joystick
 [x] passage secret dans bords
-[ ] ajout d'un second kart
+[x] ajout d'un second kart
 [x] touche de reload
 [ ] A la fin, faire une beau circuit avec couleur MALIBU (type circuit sur paint)
 [ ] lignes infranchissables
+[ ] utilisation joystick
 
 *
 # Notes #

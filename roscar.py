@@ -12,18 +12,17 @@ POSITION_DEPART = [145, 637]
 POSITION_DEPART_2 = [165, 637]
 
 
-
-def generation_sprites_kart():
+def generation_sprites_kart(nom_kart):
     sprites = {
-        (0, -1): "resources/steve_kart_dos.png",
-        (1, -1): "resources/steve_kart_haut_droite.png",
-        (1, 0): "resources/steve_kart_droite.png",
-        (1, 1): "resources/steve_kart_bas_droite.png",
-        (0, 0): "resources/steve_kart_dos.png",
-        (0, 1): "resources/steve_kart_face.png",
-        (-1, 1): "resources/steve_kart_bas_gauche.png",
-        (-1, 0): "resources/steve_kart_gauche.png",
-        (-1, -1): "resources/steve_kart_haut_gauche.png",
+        (0, -1): "resources/"+nom_kart+"_kart_dos.png",
+        (1, -1): "resources/"+nom_kart+"_kart_haut_droite.png",
+        (1, 0): "resources/"+nom_kart+"_kart_droite.png",
+        (1, 1): "resources/"+nom_kart+"_kart_bas_droite.png",
+        (0, 0): "resources/"+nom_kart+"_kart_dos.png",
+        (0, 1): "resources/"+nom_kart+"_kart_face.png",
+        (-1, 1): "resources/"+nom_kart+"_kart_bas_gauche.png",
+        (-1, 0): "resources/"+nom_kart+"_kart_gauche.png",
+        (-1, -1): "resources/"+nom_kart+"_kart_haut_gauche.png",
     }
 
     for x in [-1, 0, 1]:
@@ -36,28 +35,11 @@ def generation_sprites_kart():
     
     return sprites
 
+def generation_sprites_kart_steve():
+    return generation_sprites_kart("steve")
+    
 def generation_sprites_kart_bob():
-    sprites = {
-        (0, -1): "resources/bob_kart_dos.png",
-        (1, -1): "resources/bob_kart_haut_droite.png",
-        (1, 0): "resources/bob_kart_droite.png",
-        (1, 1): "resources/bob_kart_bas_droite.png",
-        (0, 0): "resources/bob_kart_dos.png",
-        (0, 1): "resources/bob_kart_face.png",
-        (-1, 1): "resources/bob_kart_bas_gauche.png",
-        (-1, 0): "resources/bob_kart_gauche.png",
-        (-1, -1): "resources/bob_kart_haut_gauche.png",
-    }
-
-    for x in [-1, 0, 1]:
-        for y in [-1, 0, 1]:
-            nom_fichier = sprites[(x, y)]
-            print(nom_fichier)
-            image = pygame.image.load(nom_fichier)
-            image.set_colorkey(MALIBU)  # color du fond a ne pas imprimer
-            sprites[(x, y)] = pygame.transform.scale(image, (TAILLE_KART, TAILLE_KART))
-    
-    return sprites
+    return generation_sprites_kart("bob")
 
 def preparation_masque_hors_piste():
     sortie = pygame.image.load("resources/circuit.png")
@@ -71,23 +53,26 @@ def generation_sprite_circuit():
     circuit.set_colorkey(MALIBU)
     return pygame.transform.scale(circuit, (768, 768))
 
-def calcul_commande_direction( keys ):
+def calcul_commande_direction( liste_touches_appuyees, touche_haut, touche_bas, touche_gauche, touche_droite ):
     direction_x = 0
     direction_y = 0
 
-    if keys[pygame.K_z]:
+    if liste_touches_appuyees[pygame.K_z]:
         direction_y -= 1
 
-    if keys[pygame.K_s]:
+    if liste_touches_appuyees[pygame.K_s]:
         direction_y += 1
 
-    if keys[pygame.K_d]:
+    if liste_touches_appuyees[pygame.K_d]:
         direction_x += 1
 
-    if keys[pygame.K_q]:
+    if liste_touches_appuyees[pygame.K_q]:
         direction_x -= 1
 
     return direction_x, direction_y
+
+def calcul_commande_direction_steve( keys ):
+    return calcul_commande_direction (keys, pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d )
 
 def calcul_commande_direction_bob( keys ):
     direction_x = 0
@@ -107,10 +92,10 @@ def calcul_commande_direction_bob( keys ):
 
     return direction_x, direction_y
 
-def calcul_nouvelle_position(steve_position, direction_x, direction_y, vitesse):
+def calcul_nouvelle_position(position, direction_x, direction_y, vitesse):
     nouvelle_position = [
-        steve_position[0] + direction_x * vitesse,
-        steve_position[1] + direction_y * vitesse
+        position[0] + direction_x * vitesse,
+        position[1] + direction_y * vitesse
     ]
     return nouvelle_position
 
@@ -129,19 +114,18 @@ def mise_a_jour_vitesse( vitesse_courante, horspiste ):
     else :
         return VITESSE_MAX    
     
-def choisir_orientation_sprite_steve_kart( kart_courant, direction_x, direction_y ):     
+def choisir_orientation_sprite_kart( kart_courant, direction_x, direction_y, sprite_images ):
     # si la direction change, changer l'image
     if direction_y != 0 or direction_x != 0:
-        return steve_images[(direction_x, direction_y)]
+        return sprite_images[(direction_x, direction_y)]
     else:
         return kart_courant
+    
+def choisir_orientation_sprite_steve_kart( kart_courant, direction_x, direction_y ):     
+    return choisir_orientation_sprite_kart( kart_courant, direction_x, direction_y, steve_images)
 
 def choisir_orientation_sprite_bob_kart( kart_courant, direction_x, direction_y ):     
-    # si la direction change, changer l'image
-    if direction_y != 0 or direction_x != 0:
-        return bob_images[(direction_x, direction_y)]
-    else:
-        return kart_courant
+    return choisir_orientation_sprite_kart( kart_courant, direction_x, direction_y, bob_images)
 
 def detection_signal_interruption():
     liste_evenements = pygame.event
@@ -159,7 +143,7 @@ def afficher_tout(screen, circuit, sortie, kart_a, position_a, kart_b, position_
     pygame.display.flip()
 
 
-steve_images = generation_sprites_kart()
+steve_images = generation_sprites_kart_steve()
 bob_images = generation_sprites_kart_bob()
 circuit = generation_sprite_circuit()
 sortie_mask, sortie = preparation_masque_hors_piste()
@@ -192,7 +176,7 @@ while True:
     # détection clavier et direction + position Steve
     keys = pygame.key.get_pressed()
 
-    steve_direction_x, steve_direction_y = calcul_commande_direction( keys )
+    steve_direction_x, steve_direction_y = calcul_commande_direction_steve( keys )
     steve_position = commande_reload_position_bob( steve_position, keys )
     horspiste = detection_hors_piste( sortie_mask, steve_kart, steve_position)
     # arreter le kart si hors piste 
