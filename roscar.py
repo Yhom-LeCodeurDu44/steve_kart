@@ -7,7 +7,6 @@ screen = pygame.display.set_mode((768, 768))
 MALIBU = (140, 198, 255)
 TAILLE_KART = 20
 VITESSE_MAX = 4
-vitesse = VITESSE_MAX
 VITESSE_HORS_PISTE = 0.5
 POSITION_DEPART = [145, 637]
 POSITION_DEPART_2 = [165, 637]
@@ -116,12 +115,12 @@ def calcul_nouvelle_position(steve_position, direction_x, direction_y, vitesse):
     return nouvelle_position
 
 
-def detection_hors_piste(sortie_mask, kart_steve):
-    maskart = pygame.mask.from_surface(kart_steve)
-    return sortie_mask.overlap(maskart, steve_position)
+def detection_hors_piste(sortie_mask, kart_courant, position_courante):
+    maskart = pygame.mask.from_surface(kart_courant)
+    return sortie_mask.overlap(maskart, position_courante)
     
 
-def mise_a_jour_vitesse_horspiste( vitesse_courante, horspiste ):
+def mise_a_jour_vitesse( vitesse_courante, horspiste ):
     if horspiste: 
         if vitesse_courante <= 0:
             return 0
@@ -170,14 +169,16 @@ steve_direction_x = 0
 steve_direction_y = -1
 steve_kart = steve_images[(steve_direction_x, steve_direction_y)]
 steve_position = POSITION_DEPART
+steve_vitesse = 0
 
 #initialisation bob
 bob_direction_x = 0
 bob_direction_y = -1
 bob_kart = bob_images[(bob_direction_x, bob_direction_y)]
 bob_position = POSITION_DEPART_2
+bob_vitesse = 0
 
-def commande_reload_position( steve_position, keys ):
+def commande_reload_position_bob( steve_position, keys ):
     if keys[pygame.K_f]:
         return POSITION_DEPART
     else:
@@ -188,22 +189,24 @@ clock = pygame.time.Clock()
 while True:
     time = clock.tick(60)
 
-    # détection clavier et direction + position
+    # détection clavier et direction + position Steve
     keys = pygame.key.get_pressed()
 
     steve_direction_x, steve_direction_y = calcul_commande_direction( keys )
-
-    bob_direction_x, bob_direction_y = calcul_commande_direction_bob( keys )
-
-    steve_position = commande_reload_position( steve_position, keys )
-
-    steve_position = calcul_nouvelle_position(steve_position, steve_direction_x, steve_direction_y, vitesse)
-    
-    # arreter le kart si hors piste   
-    horspiste = detection_hors_piste( sortie_mask, steve_kart)
-    vitesse = mise_a_jour_vitesse_horspiste( vitesse, horspiste )
-
+    steve_position = commande_reload_position_bob( steve_position, keys )
+    horspiste = detection_hors_piste( sortie_mask, steve_kart, steve_position)
+    # arreter le kart si hors piste 
+    steve_vitesse = mise_a_jour_vitesse( steve_vitesse, horspiste )
+    steve_position = calcul_nouvelle_position(steve_position, steve_direction_x, steve_direction_y, steve_vitesse)
     steve_kart = choisir_orientation_sprite_steve_kart(steve_kart, steve_direction_x, steve_direction_y)
+    
+    # détection clavier et direction + position Bob
+    bob_direction_x, bob_direction_y = calcul_commande_direction_bob( keys )
+    bob_position = commande_reload_position_bob( bob_position, keys )
+  
+    horspiste = detection_hors_piste( sortie_mask, bob_kart, bob_position)
+    bob_vitesse = mise_a_jour_vitesse( bob_vitesse, horspiste )
+    bob_position = calcul_nouvelle_position(bob_position, bob_direction_x, bob_direction_y, bob_vitesse)
     bob_kart = choisir_orientation_sprite_bob_kart(bob_kart, bob_direction_x, bob_direction_y)
 
     afficher_tout( screen, circuit, sortie, steve_kart, steve_position, bob_kart, bob_position )
