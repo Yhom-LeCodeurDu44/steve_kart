@@ -7,10 +7,12 @@
 [x] passage secret dans bords
 [x] ajout d'un second kart
 [x] touche de reload
-[ ] A la fin, faire une beau circuit avec couleur MALIBU (type circuit sur paint)
+[ ] faire un beau circuit
 [ ] lignes infranchissables
 [ ] utilisation joystick
-
+[ ] compteur de tour + chrono (4 tour)
+[ ] si reload apparaitre sur checkpoint
+[ ] Chaiqupou1t (checkpoint)
 *
 # Notes #
 ## Détection des bords

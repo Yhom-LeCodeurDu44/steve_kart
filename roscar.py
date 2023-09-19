@@ -110,7 +110,7 @@ def mise_a_jour_vitesse( vitesse_courante, horspiste ):
         if vitesse_courante <= 0:
             return 0
         else:
-            return vitesse_courante - VITESSE_MAX/40
+            return vitesse_courante - VITESSE_MAX/50
     else :
         return VITESSE_MAX    
     
@@ -127,12 +127,14 @@ def choisir_orientation_sprite_steve_kart( kart_courant, direction_x, direction_
 def choisir_orientation_sprite_bob_kart( kart_courant, direction_x, direction_y ):     
     return choisir_orientation_sprite_kart( kart_courant, direction_x, direction_y, bob_images)
 
-def detection_signal_interruption():
+def detection_signal_interruption(keys):
     liste_evenements = pygame.event
     for nouvel_evenement in liste_evenements.get():
         # vérifier si signal se sortie
         if nouvel_evenement.type == pygame.QUIT:
             # cassos
+            exit(0)
+        if keys[pygame.K_ESCAPE]:
             exit(0)
 
 def afficher_tout(screen, circuit, sortie, kart_a, position_a, kart_b, position_b):
@@ -162,6 +164,9 @@ bob_kart = bob_images[(bob_direction_x, bob_direction_y)]
 bob_position = POSITION_DEPART_2
 bob_vitesse = 0
 
+def calcul_touche_reload_position( touche_reload_position, steve_position, bob_position, keys ):
+
+    return
 def commande_reload_position_steve( steve_position, keys ):
     if keys[pygame.K_f]:
         return POSITION_DEPART
@@ -202,4 +207,4 @@ while True:
     afficher_tout( screen, circuit, sortie, steve_kart, steve_position, bob_kart, bob_position )
 
     # détection d'evenement
-    detection_signal_interruption()
+    detection_signal_interruption(keys)
