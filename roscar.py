@@ -162,11 +162,17 @@ bob_kart = bob_images[(bob_direction_x, bob_direction_y)]
 bob_position = POSITION_DEPART_2
 bob_vitesse = 0
 
-def commande_reload_position_bob( steve_position, keys ):
+def commande_reload_position_steve( steve_position, keys ):
     if keys[pygame.K_f]:
         return POSITION_DEPART
     else:
         return steve_position 
+    
+def commande_reload_position_bob( bob_position, keys ):
+    if keys[pygame.K_g]:
+        return POSITION_DEPART
+    else:
+        return bob_position 
 
 # boucle principale
 clock = pygame.time.Clock()
@@ -177,7 +183,7 @@ while True:
     keys = pygame.key.get_pressed()
 
     steve_direction_x, steve_direction_y = calcul_commande_direction_steve( keys )
-    steve_position = commande_reload_position_bob( steve_position, keys )
+    steve_position = commande_reload_position_steve( steve_position, keys )
     horspiste = detection_hors_piste( sortie_mask, steve_kart, steve_position)
     # arreter le kart si hors piste 
     steve_vitesse = mise_a_jour_vitesse( steve_vitesse, horspiste )
