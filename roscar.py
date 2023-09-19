@@ -169,7 +169,7 @@ def commande_reload_position_steve( steve_position, keys ):
         return steve_position 
     
 def commande_reload_position_bob( bob_position, keys ):
-    if keys[pygame.K_g]:
+    if keys[pygame.K_RSHIFT]:
         return POSITION_DEPART
     else:
         return bob_position 
