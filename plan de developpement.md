@@ -10,9 +10,10 @@
 [ ] faire un beau circuit
 [ ] lignes infranchissables
 [ ] utilisation joystick
-[ ] compteur de tour + chrono (4 tour)
+[ ] compteur de tour + chrono (4 tours)
 [ ] si reload apparaitre sur checkpoint
-[ ] Chaiqupou1t (checkpoint)
+[ ] Checkpoint
+[ ] Choisir Player1/2
 *
 # Notes #
 ## Détection des bords
