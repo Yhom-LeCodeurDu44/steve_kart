@@ -1,9 +1,8 @@
-from collections import namedtuple
 import pygame
-from fichier_secteurs import detection_secteur, generation_cartes_secteur, init_debogue, mise_a_jour_secteurs_traverses, rendu_deboggage
+from fichier_secteurs import generation_cartes_secteur, init_debogue, rendu_deboggage
 
 from initialisation_images import generation_sprite_circuit, generation_sprites_kart_bob, generation_sprites_kart_steve, preparation_masque_hors_piste
-from kart import Kart, calcul_commande_direction_bob, calcul_nouvelle_position, change_direction_selon_commande_steve, choisir_orientation_sprite, choisir_orientation_sprite_bob_kart, choisir_orientation_sprite_kart, detection_hors_piste, mise_a_jour_kart, mise_a_jour_vitesse
+from kart import Kart, calcul_commande_direction_bob, change_direction_selon_commande_steve, mise_a_jour_kart
 
 pygame.init()
 
