@@ -11,35 +11,65 @@ VITESSE_HORS_PISTE = 0.5
 POSITION_DEPART = [145, 637]
 POSITION_DEPART_2 = [165, 637]
 
+def convertir_couleur(img, vert_clair, rouge_clair):
+    original_color_key = img.get_colorkey()
+    img.set_colorkey(vert_clair)
+    surf = img.copy()
+    surf.fill(rouge_clair)
+    surf.blit(img, (0, 0))
+    img.set_colorkey(original_color_key)
+    surf.set_colorkey(original_color_key)
+    return surf
 
-def generation_sprites_kart(nom_kart):
-    sprites = {
-        (0, -1): "resources/"+nom_kart+"_kart_dos.png",
-        (1, -1): "resources/"+nom_kart+"_kart_haut_droite.png",
-        (1, 0): "resources/"+nom_kart+"_kart_droite.png",
-        (1, 1): "resources/"+nom_kart+"_kart_bas_droite.png",
-        (0, 0): "resources/"+nom_kart+"_kart_dos.png",
-        (0, 1): "resources/"+nom_kart+"_kart_face.png",
-        (-1, 1): "resources/"+nom_kart+"_kart_bas_gauche.png",
-        (-1, 0): "resources/"+nom_kart+"_kart_gauche.png",
-        (-1, -1): "resources/"+nom_kart+"_kart_haut_gauche.png",
-    }
+def transform_vert_to_rouge(img):
+    vert_clair = [24, 235, 0]
+    rouge_clair = [236, 10, 10]
+    vert_foncé = [0, 162, 0]
+    rouge_foncé = [155, 33, 33]
+    surf = convertir_couleur(img, vert_clair, rouge_clair)
+    surf = convertir_couleur(surf, vert_foncé, rouge_foncé)
+    return surf
 
+def initialiser_images_kart(fichiers_karts):
+    images = {}
     for x in [-1, 0, 1]:
         for y in [-1, 0, 1]:
-            nom_fichier = sprites[(x, y)]
+            nom_fichier = fichiers_karts[(x, y)]
             print(nom_fichier)
             image = pygame.image.load(nom_fichier)
-            image.set_colorkey(MALIBU)  # color du fond a ne pas imprimer
-            sprites[(x, y)] = pygame.transform.scale(image, (TAILLE_KART, TAILLE_KART))
-    
-    return sprites
+            image.set_colorkey(MALIBU)  # color du fond a ne pas i,primer
+            images[(x, y)] = pygame.transform.scale(image, (TAILLE_KART, TAILLE_KART))
+    return images
+
+
+def convertir_images_kart_en_rouge(sprites_verts):
+    images_rouges = {}
+    for x in [-1, 0, 1]:
+        for y in [-1, 0, 1]:
+            img = sprites_verts[(x, y)]
+            images_rouges[(x, y)] = transform_vert_to_rouge(img)
+    return images_rouges
+
+def generation_sprites_kart_verts(nom_kart='steve'):
+    sprites_verts = {
+        (0, -1): "resources/kart_vert_dos.png",
+        (1, -1): "resources/kart_vert_haut_droite.png",
+        (1, 0): "resources/kart_vert_droite.png",
+        (1, 1): "resources/kart_vert_bas_droite.png",
+        (0, 0): "resources/kart_vert_dos.png",
+        (0, 1): "resources/kart_vert_face.png",
+        (-1, 1): "resources/kart_vert_bas_gauche.png",
+        (-1, 0): "resources/kart_vert_gauche.png",
+        (-1, -1): "resources/kart_vert_haut_gauche.png",
+    }
+
+    return initialiser_images_kart(sprites_verts)
 
 def generation_sprites_kart_steve():
-    return generation_sprites_kart("steve")
+    return generation_sprites_kart_verts("steve")
     
-def generation_sprites_kart_bob():
-    return generation_sprites_kart("bob")
+def generation_sprites_kart_bob(sprites_verts):
+    return convertir_images_kart_en_rouge(sprites_verts)
 
 def preparation_masque_hors_piste():
     sortie = pygame.image.load("resources/circuit.png")
@@ -49,7 +79,7 @@ def preparation_masque_hors_piste():
     return mask, sortie
 
 def generation_sprite_circuit():
-    circuit = pygame.image.load("resources/steve_kart_map.png")
+    circuit = pygame.image.load("resources/oskart_map.png")
     circuit.set_colorkey(MALIBU)
     return pygame.transform.scale(circuit, (768, 768))
 
@@ -146,7 +176,7 @@ def afficher_tout(screen, circuit, sortie, kart_a, position_a, kart_b, position_
 
 
 steve_images = generation_sprites_kart_steve()
-bob_images = generation_sprites_kart_bob()
+bob_images = generation_sprites_kart_bob(steve_images)
 circuit = generation_sprite_circuit()
 sortie_mask, sortie = preparation_masque_hors_piste()
     
