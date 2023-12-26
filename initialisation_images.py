@@ -44,7 +44,7 @@ def convertir_images_kart_en_rouge(sprites_verts):
             images_rouges[(x, y)] = transform_vert_to_rouge(img)
     return images_rouges
 
-def generation_sprites_kart_verts(nom_kart='steve'):
+def generation_sprites_kart_verts():
     sprites_verts = {
         (0, -1): "resources/kart_vert_dos.png",
         (1, -1): "resources/kart_vert_haut_droite.png",
@@ -60,7 +60,7 @@ def generation_sprites_kart_verts(nom_kart='steve'):
     return initialiser_images_kart(sprites_verts)
 
 def generation_sprites_kart_steve():
-    return generation_sprites_kart_verts("steve")
+    return generation_sprites_kart_verts()
     
 def generation_sprites_kart_bob(sprites_verts):
     return convertir_images_kart_en_rouge(sprites_verts)

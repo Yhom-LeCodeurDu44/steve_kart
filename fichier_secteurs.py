@@ -24,19 +24,20 @@ def detection_secteur(secteur: pygame.Surface, steve_position: [int]):
     except KeyError:
         return
 
-def mise_a_jour_secteurs_traverses_steve(secteurs_traverse: set, secteur_courant):
-    if secteur_courant is None:
+def mise_a_jour_secteurs_traverses(kart, secteur):
+    kart.secteur_courant = secteur
+    if kart.secteur_courant is None:
         return
     else:
-        secteurs_traverse.add(secteur_courant) 
+        kart.secteurs.add(kart.secteur_courant) 
 
 
 def init_debogue():
     pygame.font.init()
     return pygame.font.SysFont('Calibri', 20)
 
-def rendu_deboggage(police_debogue, steve_secteurs):
-    message = f'secteurs {steve_secteurs}'
+def rendu_deboggage(police_debogue, steve, bob):
+    message = f'Steve: {steve.secteurs}\nBob: {bob.secteurs}'
     debogue = police_debogue.render(message, False, (0,0,0))
     return debogue
 
