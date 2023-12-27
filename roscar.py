@@ -1,5 +1,6 @@
 import pygame
 from fichier_secteurs import generation_cartes_secteur, init_debogue, rendu_deboggage
+from gestion_interface import detection_signal_interruption, lecture_direction_joysticks, lecture_touches_pressées
 
 from initialisation_images import (
     generation_sprite_circuit,
@@ -7,13 +8,7 @@ from initialisation_images import (
     generation_sprites_kart_steve,
     preparation_masque_hors_piste,
 )
-from kart import (
-    Kart,
-    change_direction_selon_commande,
-    change_direction_selon_commande_2,
-    commande_reload,
-    mise_a_jour_kart,
-)
+from kart import Kart, change_direction_selon_commande, detection_reload, mise_a_jour_kart
 
 pygame.init()
 pygame.joystick.init()
@@ -40,18 +35,6 @@ COMMANDES_BOB = {
     "droite": pygame.K_RIGHT,
     "reload": pygame.K_RSHIFT,
 }
-
-
-def detection_signal_interruption(keys):
-    liste_evenements = pygame.event
-    for nouvel_evenement in liste_evenements.get():
-        # vérifier si signal se sortie
-        if nouvel_evenement.type == pygame.QUIT:
-            # cassos
-            exit(0)
-        if keys[pygame.K_ESCAPE]:
-            exit(0)
-        print(f"evenement non traité {nouvel_evenement}")
 
 
 def afficher_tout(
@@ -87,6 +70,7 @@ steve.secteurs = set()
 steve.secteur_courant = -1
 steve.image_courante = steve.images[(steve.direction_x, steve.direction_y)]
 steve.touches_commande = COMMANDES_STEVE
+steve.position_depart = POSITION_DEPART
 
 # initialisation bob
 bob = Kart()
@@ -99,6 +83,7 @@ bob.secteur_courant = None
 bob.secteurs = set()
 bob.image_courante = bob.images[(bob.direction_x, bob.direction_y)]
 bob.touches_commande = COMMANDES_BOB
+bob.position_depart = POSITION_DEPART_2
 
 axes_joystick_1 = {
     "haut": False,
@@ -113,42 +98,36 @@ axes_joystick_2 = {
     "droite": False,
 }
 
+
+def mise_a_jour_karts(steve, bob, sortie_mask, zones_secteurs):
+    mise_a_jour_kart(steve, sortie_mask, zones_secteurs)
+    mise_a_jour_kart(bob, sortie_mask, zones_secteurs)
+
+
 # boucle principale
 clock = pygame.time.Clock()
+
+
 while True:
     time = clock.tick(60)
 
     # détection clavier et direction + position Steve
-    keys = pygame.key.get_pressed()
-    nb_joysticks = pygame.joystick.get_count()
+    etat_touches = lecture_touches_pressées()
+    evenements = pygame.event.get()
+    axes_joystick_1, axes_joystick_2 = lecture_direction_joysticks(joysticks)
 
-    if nb_joysticks > 0:
-        axes_joystick_1 = {
-            "gauche": joysticks[0].get_axis(0) < -0.2,
-            "droite": joysticks[0].get_axis(0) > 0.2,
-            "haut": joysticks[0].get_axis(1) < -0.2,
-            "bas": joysticks[0].get_axis(1) > 0.2,
-        }
-        print(axes_joystick_1)
+    # détection d'evenement
+    detection_signal_interruption(evenements, etat_touches)
 
-    if nb_joysticks > 1:
-        axes_joystick_2 = {
-            "gauche": joysticks[1].get_axis(0) < -0.2,
-            "droite": joysticks[1].get_axis(0) > 0.2,
-            "haut": joysticks[1].get_axis(1) < -0.2,
-            "bas": joysticks[1].get_axis(1) > 0.2,
-        }
-        print(axes_joystick_2)
+    change_direction_selon_commande(steve, etat_touches, axes_joystick_1)
+    change_direction_selon_commande(bob, etat_touches, axes_joystick_2)
 
-    change_direction_selon_commande_2(steve, keys, axes_joystick_1)
-    change_direction_selon_commande_2(bob, keys, axes_joystick_2)
-    commande_reload(steve, keys, POSITION_DEPART)
-    commande_reload(bob, keys, POSITION_DEPART_2)
+    detection_reload(steve, etat_touches)
 
-    mise_a_jour_kart(steve, sortie_mask, zones_secteurs)
-    mise_a_jour_kart(bob, sortie_mask, zones_secteurs)
+    mise_a_jour_karts(steve, bob, sortie_mask, zones_secteurs)
 
     debogue = rendu_deboggage(police_debogue, steve, bob)
+
     afficher_tout(
         screen,
         circuit,
@@ -159,6 +138,3 @@ while True:
         bob.position,
         debogue,
     )
-
-    # détection d'evenement
-    detection_signal_interruption(keys)

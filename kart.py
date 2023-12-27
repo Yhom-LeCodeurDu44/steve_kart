@@ -67,7 +67,7 @@ def calcul_commande_direction_2(
     return direction_x, direction_y
 
 
-def change_direction_selon_commande_2(kart, keys, axes_joystick):
+def change_direction_selon_commande(kart, keys, axes_joystick):
     kart.direction_x, kart.direction_y = calcul_commande_direction_2(
         keys,
         kart.touches_commande["haut"],
@@ -77,15 +77,10 @@ def change_direction_selon_commande_2(kart, keys, axes_joystick):
         axes_joystick
     )
 
-
-def change_direction_selon_commande(kart, keys):
-    kart.direction_x, kart.direction_y = calcul_commande_direction(
-        keys,
-        kart.touches_commande["haut"],
-        kart.touches_commande["bas"],
-        kart.touches_commande["gauche"],
-        kart.touches_commande["droite"],
-    )
+def detection_reload(kart, keys):
+    if keys[kart.touches_commande["reload"]]:
+        kart.position = kart.position_depart
+        
 
 
 def calcul_nouvelle_position(kart):
@@ -93,11 +88,6 @@ def calcul_nouvelle_position(kart):
         int(kart.position[0] + kart.direction_x * kart.vitesse),
         int(kart.position[1] + kart.direction_y * kart.vitesse),
     ]
-
-
-def commande_reload(kart, keys, position_depart):
-    if keys[kart.touches_commande["reload"]]:
-        kart.position = position_depart
 
 
 def detection_hors_piste(
@@ -134,6 +124,7 @@ def oriente_image_kart(kart: Kart):
 
 
 def mise_a_jour_kart(kart: Kart, sortie_mask: Mask, zones_secteurs: Surface):
+
     horspiste = detection_hors_piste(sortie_mask, kart.image_courante, kart.position)
     mise_a_jour_vitesse(kart, horspiste)
     calcul_nouvelle_position(kart)
