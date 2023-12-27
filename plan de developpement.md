@@ -12,6 +12,7 @@
 [ ] utilisation joystick
 [ ] compteur de tour + chrono (4 tours)
 [ ] si reload apparaitre sur checkpoint
+[ ] secteurs
 [ ] Checkpoint
 [ ] Choisir Player1/2
 *
