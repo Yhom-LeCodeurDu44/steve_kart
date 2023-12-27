@@ -9,12 +9,16 @@
 [x] touche de reload
 [ ] faire un beau circuit
 [ ] lignes infranchissables
-[ ] utilisation joystick
+[x] utilisation joystick
+[ ] reload depuis les joysticks
 [ ] compteur de tour + chrono (4 tours)
 [ ] si reload apparaitre sur checkpoint
-[ ] secteurs
+[x] secteurs
 [ ] Checkpoint
 [ ] Choisir Player1/2
+
+Bugs
+- crash si sortie du périmètre de l'image dans la détection de secteurs
 *
 # Notes #
 ## Détection des bords

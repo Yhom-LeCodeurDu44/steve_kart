@@ -40,6 +40,44 @@ def calcul_commande_direction(
 
     return direction_x, direction_y
 
+
+def calcul_commande_direction_2(
+    liste_touches_appuyees,
+    touche_haut,
+    touche_bas,
+    touche_gauche,
+    touche_droite,
+    axes_joystick
+):
+    direction_x = 0
+    direction_y = 0
+
+    if liste_touches_appuyees[touche_haut] | axes_joystick["haut"]:
+        direction_y -= 1
+
+    if liste_touches_appuyees[touche_bas] | axes_joystick["bas"]:
+        direction_y += 1
+
+    if liste_touches_appuyees[touche_droite] | axes_joystick["droite"]:
+        direction_x += 1
+
+    if liste_touches_appuyees[touche_gauche] | axes_joystick["gauche"]:
+        direction_x -= 1
+
+    return direction_x, direction_y
+
+
+def change_direction_selon_commande_2(kart, keys, axes_joystick):
+    kart.direction_x, kart.direction_y = calcul_commande_direction_2(
+        keys,
+        kart.touches_commande["haut"],
+        kart.touches_commande["bas"],
+        kart.touches_commande["gauche"],
+        kart.touches_commande["droite"],
+        axes_joystick
+    )
+
+
 def change_direction_selon_commande(kart, keys):
     kart.direction_x, kart.direction_y = calcul_commande_direction(
         keys,
@@ -48,6 +86,7 @@ def change_direction_selon_commande(kart, keys):
         kart.touches_commande["gauche"],
         kart.touches_commande["droite"],
     )
+
 
 def calcul_nouvelle_position(kart):
     kart.position = [
@@ -59,7 +98,8 @@ def calcul_nouvelle_position(kart):
 def commande_reload(kart, keys, position_depart):
     if keys[kart.touches_commande["reload"]]:
         kart.position = position_depart
-        
+
+
 def detection_hors_piste(
     sortie_mask: Mask, image_kart: Surface, position_courante: List[int]
 ):
