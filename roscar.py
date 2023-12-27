@@ -2,7 +2,7 @@ import pygame
 from fichier_secteurs import generation_cartes_secteur, init_debogue, rendu_deboggage
 
 from initialisation_images import generation_sprite_circuit, generation_sprites_kart_bob, generation_sprites_kart_steve, preparation_masque_hors_piste
-from kart import Kart, calcul_commande_direction_bob, change_direction_selon_commande_steve, mise_a_jour_kart
+from kart import Kart, change_direction_selon_commande, commande_reload, mise_a_jour_kart
 
 pygame.init()
 
@@ -12,6 +12,22 @@ VITESSE_HORS_PISTE = 0.5
 POSITION_DEPART = [145, 637]
 POSITION_DEPART_2 = [165, 637]
 
+
+COMMANDES_STEVE = {
+        "haut": pygame.K_z,
+        "bas": pygame.K_s,
+        "gauche": pygame.K_q,
+        "droite": pygame.K_d,
+        "reload": pygame.K_f,
+    }
+
+COMMANDES_BOB = {
+        "haut": pygame.K_UP,
+        "bas": pygame.K_DOWN,
+        "gauche": pygame.K_LEFT,
+        "droite": pygame.K_RIGHT,
+        "reload": pygame.K_RSHIFT,
+    }
 
 def detection_signal_interruption(keys):
     liste_evenements = pygame.event
@@ -50,6 +66,7 @@ steve.vitesse = 0
 steve.secteurs = set()
 steve.secteur_courant = -1
 steve.image_courante = steve.images[(steve.direction_x, steve.direction_y)]
+steve.touches_commande = COMMANDES_STEVE
 
 #initialisation bob
 bob = Kart()
@@ -60,16 +77,9 @@ bob.position = POSITION_DEPART_2
 bob.vitesse = 0
 bob.secteur_courant = None
 bob.secteurs = set()
-
 bob.image_courante = bob.images[(bob.direction_x, bob.direction_y)]
+bob.touches_commande = COMMANDES_BOB
 
-def commande_reload_position( kart, keys ):
-    if keys[pygame.K_f]:
-        kart.position = POSITION_DEPART
-    
-def commande_reload_position_bob( bob, keys ):
-    if keys[pygame.K_RSHIFT]:
-        bob.position = POSITION_DEPART
 
 # boucle principale
 clock = pygame.time.Clock()
@@ -79,10 +89,11 @@ while True:
     # détection clavier et direction + position Steve
     keys = pygame.key.get_pressed()
 
-    change_direction_selon_commande_steve( steve, keys )
-    commande_reload_position( steve, keys )
-    calcul_commande_direction_bob( bob, keys )
-    commande_reload_position_bob( bob, keys )
+    
+    change_direction_selon_commande(steve, keys)
+    change_direction_selon_commande( bob, keys )
+    commande_reload( steve, keys, POSITION_DEPART )
+    commande_reload( bob, keys, POSITION_DEPART_2 )
 
     mise_a_jour_kart(steve, sortie_mask, zones_secteurs)
     mise_a_jour_kart(bob, sortie_mask, zones_secteurs)
