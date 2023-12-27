@@ -1,3 +1,5 @@
+from typing import List
+from pygame import Mask, Surface
 import pygame
 
 from fichier_secteurs import detection_secteur, mise_a_jour_secteurs_traverses
@@ -11,7 +13,7 @@ class Kart:
     direction_x:int = 0
     direction_y:int = -1
     image_courante=None
-    position:[int]
+    position:List[int]
     vitesse:int = 0
     secteur_courant:int = None
     secteurs:set()
@@ -37,8 +39,7 @@ def calcul_commande_direction( liste_touches_appuyees, touche_haut, touche_bas, 
 def change_direction_selon_commande_steve( kart, keys ):
     kart.direction_x, kart.direction_y = calcul_commande_direction (keys, pygame.K_z, pygame.K_s, pygame.K_q, pygame.K_d )
 
-
-def calcul_commande_direction_bob( kart, keys ):
+def change_direction_selon_commande_bob( kart, keys ):
     kart.direction_x, kart.direction_y = calcul_commande_direction( keys, pygame.K_UP, pygame.K_DOWN, pygame.K_LEFT, pygame.K_RIGHT )
 
 def calcul_nouvelle_position(kart):
@@ -48,36 +49,35 @@ def calcul_nouvelle_position(kart):
     ]
 
 
-def detection_hors_piste(sortie_mask, kart_courant, position_courante):
-    maskart = pygame.mask.from_surface(kart_courant)
+def detection_hors_piste(sortie_mask: Mask, image_kart: Surface, position_courante: List[int]):
+    maskart = pygame.mask.from_surface(image_kart)
     return sortie_mask.overlap(maskart, position_courante)
     
 
-def mise_a_jour_vitesse( kart, horspiste ):
+def mise_a_jour_vitesse( kart: Kart, horspiste: bool ):
     if horspiste: 
-        if kart.vitesse <= 0:
-            kart.vitesse = 0
-        else:
-            kart.vitesse -= VITESSE_MAX/50
+        calcul_vitesse_horspiste( kart )
     else :
         kart.vitesse = VITESSE_MAX    
     
-def choisir_orientation_sprite(kart):
-    kart.image_courante = choisir_orientation_sprite_kart(kart.image_courante, kart.direction_x, kart.direction_y, kart.images)
-    
+def calcul_vitesse_horspiste( kart: Kart ):
+    # on diminue la vitesse de 1/50 de la vitesse max
+    kart.vitesse -= VITESSE_MAX/50
+    if kart.vitesse <= 0:
+        # on évite les vitesses négatives
+        kart.vitesse = 0
+        
 
-def choisir_orientation_sprite_kart( kart_courant, direction_x, direction_y, sprite_images ):
+def choisir_orientation_sprite(kart: Kart):
     # si la direction change, changer l'image
-    if direction_y != 0 or direction_x != 0:
-        return sprite_images[(direction_x, direction_y)]
-    else:
-        return kart_courant
+    if kart.direction_y != 0 or kart.direction_x != 0:
+        oriente_image_kart( kart )
+    # sinon garder la même image
 
+def oriente_image_kart( kart: Kart ):
+    kart.image_courante = kart.images[(kart.direction_x, kart.direction_y)]
 
-def choisir_orientation_sprite_bob_kart( bob, kart_courant, direction_x, direction_y ):     
-    return choisir_orientation_sprite_kart( kart_courant, direction_x, direction_y, bob.images)
-
-def mise_a_jour_kart(kart, sortie_mask, zones_secteurs):
+def mise_a_jour_kart(kart: Kart, sortie_mask: Mask, zones_secteurs: Surface):
         horspiste = detection_hors_piste( sortie_mask, kart.image_courante, kart.position)
         mise_a_jour_vitesse( kart, horspiste )
         calcul_nouvelle_position(kart)
