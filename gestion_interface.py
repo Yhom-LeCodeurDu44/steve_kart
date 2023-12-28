@@ -7,6 +7,22 @@ def lecture_touches_pressées():
 def lecture_direction_joysticks(joysticks):
     nb_joysticks = pygame.joystick.get_count()
 
+    axes_joystick_1 = {
+        "gauche": False,
+        "droite": False,
+        "haut": False,
+        "bas": False,
+        "reload": False,
+    }
+
+    axes_joystick_2 = {
+        "gauche": False,
+        "droite": False,
+        "haut": False,
+        "bas": False,
+        "reload": False,
+    }
+
     if nb_joysticks > 0:
         axes_joystick_1 = {
             "gauche": joysticks[0].get_axis(0) < -0.2,
