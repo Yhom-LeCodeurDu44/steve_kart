@@ -7,15 +7,17 @@
 [x] passage secret dans bords
 [x] ajout d'un second kart
 [x] touche de reload
-[ ] faire un beau circuit
-[ ] lignes infranchissables
+[x] hors piste qui ralentit
+[x] mise en place de secteurs
 [x] utilisation joystick
-[ ] reload depuis les joysticks
+[x] reload depuis les joysticks
+[ ] faire un beau circuit
 [ ] compteur de tour + chrono (4 tours)
-[ ] si reload apparaitre sur checkpoint
-[x] secteurs
-[ ] Checkpoint
-[ ] Choisir Player1/2
+[ ] checkpoint par secteur
+[ ] reload revient au secteur précédent
+[ ] musique de fond
+[ ] bruit des karts
+[ ] accélération et frein progressifs 
 
 Bugs
 - crash si sortie du périmètre de l'image dans la détection de secteurs
