@@ -18,6 +18,8 @@ class Kart:
     secteur_courant: int = None
     secteurs: set()
     touches_commande: dict = None
+    bouton_manette_reload: int = None
+    position_depart: List[int] = (0, 0)
 
 
 def calcul_commande_direction(
@@ -77,9 +79,14 @@ def change_direction_selon_commande(kart, keys, axes_joystick):
         axes_joystick
     )
 
-def detection_reload(kart, keys):
-    if keys[kart.touches_commande["reload"]]:
-        kart.position = kart.position_depart
+def remise_kart_au_depart(kart):
+    kart.position = kart.position_depart
+
+def detection_reload(kart, keys, axes_joystick):
+    if keys[kart.touches_commande["reload"]] | axes_joystick["reload"]:
+        remise_kart_au_depart(kart)
+        return
+
         
 
 
@@ -129,5 +136,7 @@ def mise_a_jour_kart(kart: Kart, sortie_mask: Mask, zones_secteurs: Surface):
     mise_a_jour_vitesse(kart, horspiste)
     calcul_nouvelle_position(kart)
     choisir_orientation_sprite(kart)
-    secteur = detection_secteur(zones_secteurs, kart.position)
+    # center of kart.image_ciourante sprite
+    center_kart = kart.image_courante.get_rect().center
+    secteur = detection_secteur(zones_secteurs, center_kart)
     mise_a_jour_secteurs_traverses(kart, secteur)

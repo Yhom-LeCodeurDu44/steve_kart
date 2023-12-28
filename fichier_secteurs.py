@@ -1,4 +1,5 @@
 from collections.abc import Set
+from typing import List
 import pygame
 
 def generation_cartes_secteur() -> pygame.Surface:
@@ -7,7 +8,7 @@ def generation_cartes_secteur() -> pygame.Surface:
     return secteur
 
 
-def detection_secteur(secteur: pygame.Surface, steve_position: [int]):
+def detection_secteur(secteur: pygame.Surface, steve_position: List[int]):
     steve_secteur_couleur = secteur.get_at(steve_position)
     
     COULEUR_SECTEURS_RED = {

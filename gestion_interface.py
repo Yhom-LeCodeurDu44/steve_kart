@@ -13,6 +13,7 @@ def lecture_direction_joysticks(joysticks):
             "droite": joysticks[0].get_axis(0) > 0.2,
             "haut": joysticks[0].get_axis(1) < -0.2,
             "bas": joysticks[0].get_axis(1) > 0.2,
+            "reload": joysticks[0].get_button(0),
         }
 
     if nb_joysticks > 1:
@@ -21,6 +22,7 @@ def lecture_direction_joysticks(joysticks):
             "droite": joysticks[1].get_axis(0) > 0.2,
             "haut": joysticks[1].get_axis(1) < -0.2,
             "bas": joysticks[1].get_axis(1) > 0.2,
+            "reload": joysticks[1].get_button(0),
         }
 
     return axes_joystick_1, axes_joystick_2

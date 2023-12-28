@@ -8,7 +8,7 @@ from initialisation_images import (
     generation_sprites_kart_steve,
     preparation_masque_hors_piste,
 )
-from kart import Kart, change_direction_selon_commande, detection_reload, mise_a_jour_kart
+from kart import Kart, change_direction_selon_commande, detection_reload, mise_a_jour_kart, remise_kart_au_depart
 
 pygame.init()
 pygame.joystick.init()
@@ -62,36 +62,36 @@ zones_secteurs: pygame.Surface = generation_cartes_secteur()
 # initialisation Steve
 steve = Kart()
 steve.images = generation_sprites_kart_steve()
+steve.position_depart = POSITION_DEPART
 steve.direction_x = 0
 steve.direction_y = -1
-steve.position = POSITION_DEPART
 steve.vitesse = 0
 steve.secteurs = set()
 steve.secteur_courant = -1
 steve.image_courante = steve.images[(steve.direction_x, steve.direction_y)]
 steve.touches_commande = COMMANDES_STEVE
-steve.position_depart = POSITION_DEPART
+remise_kart_au_depart(steve)
 
 # initialisation bob
 bob = Kart()
 bob.images = generation_sprites_kart_bob(steve.images)
+bob.position_depart = POSITION_DEPART_2
 bob.direction_x = 0
 bob.direction_y = -1
-bob.position = POSITION_DEPART_2
 bob.vitesse = 0
 bob.secteur_courant = None
 bob.secteurs = set()
 bob.image_courante = bob.images[(bob.direction_x, bob.direction_y)]
 bob.touches_commande = COMMANDES_BOB
-bob.position_depart = POSITION_DEPART_2
+remise_kart_au_depart(bob)
 
-axes_joystick_1 = {
+axes_joystick_steve = {
     "haut": False,
     "bas": False,
     "gauche": False,
     "droite": False,
 }
-axes_joystick_2 = {
+axes_joystick_bob = {
     "haut": False,
     "bas": False,
     "gauche": False,
@@ -114,15 +114,16 @@ while True:
     # détection clavier et direction + position Steve
     etat_touches = lecture_touches_pressées()
     evenements = pygame.event.get()
-    axes_joystick_1, axes_joystick_2 = lecture_direction_joysticks(joysticks)
+    axes_joystick_steve, axes_joystick_bob = lecture_direction_joysticks(joysticks)
 
     # détection d'evenement
     detection_signal_interruption(evenements, etat_touches)
 
-    change_direction_selon_commande(steve, etat_touches, axes_joystick_1)
-    change_direction_selon_commande(bob, etat_touches, axes_joystick_2)
+    change_direction_selon_commande(steve, etat_touches, axes_joystick_steve)
+    change_direction_selon_commande(bob, etat_touches, axes_joystick_bob)
 
-    detection_reload(steve, etat_touches)
+    detection_reload(steve, etat_touches, axes_joystick_steve)
+    detection_reload(bob, etat_touches, axes_joystick_bob)
 
     mise_a_jour_karts(steve, bob, sortie_mask, zones_secteurs)
 
