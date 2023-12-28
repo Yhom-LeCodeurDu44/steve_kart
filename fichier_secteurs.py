@@ -30,7 +30,7 @@ def mise_a_jour_secteurs_traverses(kart, secteur):
     if kart.secteur_courant is None:
         return
     else:
-        kart.secteurs.add(kart.secteur_courant) 
+        kart.secteurs.add(kart.secteur_courant)  
 
 
 def init_debogue():
@@ -38,9 +38,13 @@ def init_debogue():
     return pygame.font.SysFont('Calibri', 20)
 
 def rendu_deboggage(police_debogue, steve, bob):
-    message = f'Steve: {steve.secteurs}\nBob: {bob.secteurs}'
+    message = f'Steve: {steve.tours}/{steve.secteurs}\nBob: {bob.tours}/{bob.secteurs}'
     debogue = police_debogue.render(message, False, (0,0,0))
     return debogue
 
-#compteur de secte-heure
+def detection_tour(kart):
+    if kart.secteur == 0 && len(kart.secteurs) == 6:
+        kart.tours += 1
+        kart.secteurs = set()
+    
     

@@ -2,7 +2,7 @@ from typing import List
 from pygame import Mask, Surface
 import pygame
 
-from fichier_secteurs import detection_secteur, mise_a_jour_secteurs_traverses
+from fichier_secteurs import detection_secteur, mise_a_jour_secteurs_traverses, detection_tour
 
 
 VITESSE_MAX = 4
@@ -20,6 +20,7 @@ class Kart:
     touche_commandes: dict = None
     bouton_manette_reload: int = None
     position_depart: List[int] = (0, 0)
+    tours: int = 0
 
 
 def calcul_commande_direction(
@@ -112,4 +113,5 @@ def mise_a_jour_kart(kart: Kart, sortie_mask: Mask, zones_secteurs: Surface):
     # center of kart.image_ciourante sprite
     center_kart = kart.image_courante.get_rect().center
     secteur = detection_secteur(zones_secteurs, center_kart)
+    detection_tour(kart)
     mise_a_jour_secteurs_traverses(kart, secteur)
