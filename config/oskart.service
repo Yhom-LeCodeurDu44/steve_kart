@@ -1,0 +1,12 @@
+[Unit]
+Description=Programme de Jeu OsKart
+After=graphical.target
+
+[Service]
+ExecStart=/usr/bin/python3 /user/pi/steve_kart/roscar.py
+WorkingDirectory=/user/pi/steve_kart/roscar.py
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
