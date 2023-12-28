@@ -2,4 +2,3 @@
 git pull
 . venv/bin/activate
 pip install -r requirements.txt
-python roscar.py
