@@ -17,7 +17,8 @@
 [ ] reload revient au secteur précédent
 [ ] musique de fond
 [ ] bruit des karts
-[ ] accélération et frein progressifs 
+[ ] accélération et frein progressifs
+[ ] fichier d'installation et démarrage sur raspberrypi 
 
 Bugs
 - crash si sortie du périmètre de l'image dans la détection de secteurs
@@ -55,3 +56,26 @@ Méthode retenue:
 3. Le passage de tour est lorsqu’on passe du dernier secteur au premier secteur
 4. Détection des retours arrière: lorsqu’on revient du premier au dernier secteur on « annule » la progression
 5. Option: quand on sort de piste on est ramené à un point de référence du précédent secteur 
+
+
+## Notes installation sur raspberrypi 
+Config testée: Pi Zero 
+Démarrage sur Raspbian de base 
+Version python trouvée: python 3.9
+apt install \
+ python3-pip \
+ virtualenv \
+ screen \
+ lightdm \
+ git \
+ # vachement important \
+ python3-pygame-sdl2
+Pour facilité de manipulations:
+- xinetd tigervnc-standalone-server
+
+
+git clone <remote>
+cd steve_kart
+virtualenv venv
+. venv/bin/activate
+pip install -r requirements.txt (slow)
