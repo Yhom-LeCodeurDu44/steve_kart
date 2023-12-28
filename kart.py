@@ -17,65 +17,38 @@ class Kart:
     vitesse: int = 0
     secteur_courant: int = None
     secteurs: set()
-    touches_commande: dict = None
+    touche_commandes: dict = None
     bouton_manette_reload: int = None
     position_depart: List[int] = (0, 0)
 
 
 def calcul_commande_direction(
-    liste_touches_appuyees, touche_haut, touche_bas, touche_gauche, touche_droite
-):
-    direction_x = 0
-    direction_y = 0
-
-    if liste_touches_appuyees[touche_haut]:
-        direction_y -= 1
-
-    if liste_touches_appuyees[touche_bas]:
-        direction_y += 1
-
-    if liste_touches_appuyees[touche_droite]:
-        direction_x += 1
-
-    if liste_touches_appuyees[touche_gauche]:
-        direction_x -= 1
-
-    return direction_x, direction_y
-
-
-def calcul_commande_direction_2(
     liste_touches_appuyees,
-    touche_haut,
-    touche_bas,
-    touche_gauche,
-    touche_droite,
+    touches_commande,
     axes_joystick
 ):
     direction_x = 0
     direction_y = 0
 
-    if liste_touches_appuyees[touche_haut] | axes_joystick["haut"]:
+    if liste_touches_appuyees[touches_commande["haut"]] | axes_joystick["haut"]:
         direction_y -= 1
 
-    if liste_touches_appuyees[touche_bas] | axes_joystick["bas"]:
+    if liste_touches_appuyees[touches_commande["bas"] | axes_joystick["bas"]:
         direction_y += 1
 
-    if liste_touches_appuyees[touche_droite] | axes_joystick["droite"]:
+    if liste_touches_appuyees[touches_commande["droite"]] | axes_joystick["droite"]:
         direction_x += 1
 
-    if liste_touches_appuyees[touche_gauche] | axes_joystick["gauche"]:
+    if liste_touches_appuyees[touches_commande["gauche"]] | axes_joystick["gauche"]:
         direction_x -= 1
 
     return direction_x, direction_y
 
 
 def change_direction_selon_commande(kart, keys, axes_joystick):
-    kart.direction_x, kart.direction_y = calcul_commande_direction_2(
+    kart.direction_x, kart.direction_y = calcul_commande_direction(
         keys,
-        kart.touches_commande["haut"],
-        kart.touches_commande["bas"],
-        kart.touches_commande["gauche"],
-        kart.touches_commande["droite"],
+        kart.touches_commande
         axes_joystick
     )
 
