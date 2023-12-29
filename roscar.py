@@ -38,12 +38,12 @@ COMMANDES_BOB = {
 
 
 def afficher_tout(
-    screen, circuit, sortie, kart_image_a, position_a, kart_image_b, position_b, debogue
+    screen, circuit, sortie, karts, debogue
 ):
     screen.blit(circuit, (0, 0))
     screen.blit(sortie, (0, 0))
-    screen.blit(source=kart_image_a, dest=position_a)
-    screen.blit(source=kart_image_b, dest=position_b)
+    for kart in karts:
+        screen.blit(source=kart.image_courante, dest=kart.position)
     screen.blit(source=debogue, dest=(10, 10))
     pygame.display.flip()
 
@@ -133,9 +133,6 @@ while True:
         screen,
         circuit,
         sortie,
-        steve.image_courante,
-        steve.position,
-        bob.image_courante,
-        bob.position,
-        debogue,
+        (steve,bob),
+        debogue
     )

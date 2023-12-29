@@ -34,7 +34,7 @@ def calcul_commande_direction(
     if liste_touches_appuyees[touches_commande["haut"]] | axes_joystick["haut"]:
         direction_y -= 1
 
-    if liste_touches_appuyees[touches_commande["bas"] | axes_joystick["bas"]:
+    if liste_touches_appuyees[touches_commande["bas"]] | axes_joystick["bas"]:
         direction_y += 1
 
     if liste_touches_appuyees[touches_commande["droite"]] | axes_joystick["droite"]:
@@ -49,7 +49,7 @@ def calcul_commande_direction(
 def change_direction_selon_commande(kart, keys, axes_joystick):
     kart.direction_x, kart.direction_y = calcul_commande_direction(
         keys,
-        kart.touches_commande
+        kart.touches_commande,
         axes_joystick
     )
 
@@ -75,7 +75,7 @@ def detection_hors_piste(
     sortie_mask: Mask, image_kart: Surface, position_courante: List[int]
 ):
     maskart = pygame.mask.from_surface(image_kart)
-    return sortie_mask.overlap(maskart, position_courante)
+    return sortie_mask.overlap(maskart, position_courante) is not None
 
 
 def mise_a_jour_vitesse(kart: Kart, horspiste: bool):
@@ -110,8 +110,10 @@ def mise_a_jour_kart(kart: Kart, sortie_mask: Mask, zones_secteurs: Surface):
     mise_a_jour_vitesse(kart, horspiste)
     calcul_nouvelle_position(kart)
     choisir_orientation_sprite(kart)
-    # center of kart.image_ciourante sprite
-    center_kart = kart.image_courante.get_rect().center
-    secteur = detection_secteur(zones_secteurs, center_kart)
-    detection_tour(kart)
-    mise_a_jour_secteurs_traverses(kart, secteur)
+    # on utilise le centre du kart pour détecter le secteur
+    if not horspiste:
+        center_kart = kart.image_courante.get_rect().move(kart.position).center
+        secteur = detection_secteur(zones_secteurs, center_kart)
+        mise_a_jour_secteurs_traverses(kart, secteur)
+        detection_tour(kart)
+ 
